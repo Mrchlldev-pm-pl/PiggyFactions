@@ -14,9 +14,9 @@ use pocketmine\block\tile\Container;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\Listener;
-use pocketmine\event\player\PlayerCommandPreprocessEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerMoveEvent;
+use pocketmine\event\server\CommandEvent;
 use pocketmine\player\Player;
 use pocketmine\world\format\Chunk;
 use pocketmine\world\Position;
@@ -34,13 +34,16 @@ class ClaimsListener implements Listener
 
     public function onPlace(BlockPlaceEvent $event): void
     {
-        if (!$this->canAffectArea($event->getPlayer(), $event->getBlock()->getPosition())) $event->cancel();
+        if (!$this->canAffectArea($event->getPlayer(), $event->getBlockAgainst()->getPosition())) $event->cancel();
     }
 
-    public function onCommandPreprocess(PlayerCommandPreprocessEvent $event): void
+    public function onCommandPreprocess(CommandEvent $event): void
     {
-        $player = $event->getPlayer();
-        $message = $event->getMessage();
+        $player = $event->getSender();
+        $message = $event->getCommand();
+        if(!$player instanceof Player){
+            return;
+        }
         $member = $this->plugin->getPlayerManager()->getPlayer($player);
         if ($member !== null) {
             $faction = $member->getFaction();
