@@ -8,6 +8,7 @@ use CortexPE\Commando\args\TextArgument;
 use DaPigGuy\PiggyFactions\event\member\FactionJoinEvent;
 use DaPigGuy\PiggyFactions\factions\Faction;
 use DaPigGuy\PiggyFactions\flags\Flag;
+use DaPigGuy\PiggyFactions\PiggyFactions;
 use DaPigGuy\PiggyFactions\players\FactionsPlayer;
 use pocketmine\player\Player;
 
@@ -17,7 +18,7 @@ class JoinSubCommand extends FactionSubCommand
 
     public function onNormalRun(Player $sender, ?Faction $faction, FactionsPlayer $member, string $aliasUsed, array $args): void
     {
-        $targetFaction = $this->plugin->getFactionsManager()->getFactionByName($args["faction"]);
+        $targetFaction = PiggyFactions::getInstance()->getFactionsManager()->getFactionByName($args["faction"]);
         if ($targetFaction === null) {
             $member->sendMessage("commands.invalid-faction", ["{FACTION}" => $args["faction"]]);
             return;
@@ -35,7 +36,7 @@ class JoinSubCommand extends FactionSubCommand
                 $member->sendMessage("commands.you-are-banned");
                 return;
             }
-            if (count($targetFaction->getMembers()) >= ($maxPlayers = $this->plugin->getConfig()->getNested("factions.max-players", -1)) && $maxPlayers !== -1) {
+            if (count($targetFaction->getMembers()) >= ($maxPlayers = PiggyFactions::getInstance()->getConfig()->getNested("factions.max-players", -1)) && $maxPlayers !== -1) {
                 $member->sendMessage("commands.faction-full");
                 return;
             }

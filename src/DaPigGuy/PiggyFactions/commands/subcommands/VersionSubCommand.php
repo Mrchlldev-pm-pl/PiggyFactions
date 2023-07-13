@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DaPigGuy\PiggyFactions\commands\subcommands;
 
+use DaPigGuy\PiggyFactions\PiggyFactions;
 use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat;
 
@@ -29,7 +30,7 @@ class VersionSubCommand extends FactionSubCommand
             "yuriiscute53925" => ["Serbian"],
         ];
 
-        $sender->sendMessage(TextFormat::GOLD . "____________.[" . TextFormat::DARK_GREEN . "PiggyFactions " . TextFormat::GREEN . "v" . $this->plugin->getDescription()->getVersion() . " (" . $this->plugin->getPoggitBuildInfo()->getSpecificVersion() . ")" . TextFormat::GOLD . "].____________" . TextFormat::EOL .
+        $sender->sendMessage(TextFormat::GOLD . "____________.[" . TextFormat::DARK_GREEN . "PiggyFactions " . TextFormat::GREEN . "v" . PiggyFactions::getInstance()->getDescription()->getVersion() . " (" . PiggyFactions::getInstance()->getPoggitBuildInfo()->getSpecificVersion() . ")" . TextFormat::GOLD . "].____________" . TextFormat::EOL .
             TextFormat::GOLD . "PiggyFactions is a modern factions plugin developed by " . TextFormat::YELLOW . "DaPigGuy (MCPEPIG) " . TextFormat::GOLD . "and " . TextFormat::YELLOW . "Aericio" . TextFormat::GOLD . "." . TextFormat::EOL .
             TextFormat::GOLD . "Translations provided by " . implode(", ", array_map(function (string $translator, array $languages): string {
                 return TextFormat::YELLOW . $translator . " (" . implode(", ", $languages) . ")" . TextFormat::GOLD;

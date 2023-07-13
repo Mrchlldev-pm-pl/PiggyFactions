@@ -26,7 +26,7 @@ use DaPigGuy\PiggyFactions\tasks\ShowChunksTask;
 use DaPigGuy\PiggyFactions\tasks\UpdatePowerTask;
 use DaPigGuy\PiggyFactions\utils\PoggitBuildInfo;
 use Exception;
-use jojoe77777\FormAPI\Form;
+use Vecnavium\FormsUI\Form;
 use pocketmine\entity\Entity;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;

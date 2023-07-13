@@ -18,7 +18,7 @@ class PowerBoostSubCommand extends FactionSubCommand
 
     protected function prepare(): void
     {
-        $this->registerSubCommand(new PowerBoostFactionSubCommand($this->plugin, "faction", "Increases faction maximum power", ["f"]));
-        $this->registerSubCommand(new PowerBoostPlayerSubCommand($this->plugin, "player", "Increases player maximum power", ["p"]));
+        $this->registerSubCommand(new PowerBoostFactionSubCommand("faction", "Increases faction maximum power", ["f"]));
+        $this->registerSubCommand(new PowerBoostPlayerSubCommand("player", "Increases player maximum power", ["p"]));
     }
 }

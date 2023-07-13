@@ -7,6 +7,7 @@ namespace DaPigGuy\PiggyFactions\commands\subcommands\money;
 use CortexPE\Commando\args\FloatArgument;
 use DaPigGuy\PiggyFactions\commands\subcommands\FactionSubCommand;
 use DaPigGuy\PiggyFactions\factions\Faction;
+use DaPigGuy\PiggyFactions\PiggyFactions;
 use DaPigGuy\PiggyFactions\players\FactionsPlayer;
 use pocketmine\player\Player;
 
@@ -23,7 +24,7 @@ class WithdrawSubCommand extends FactionSubCommand
             $member->sendMessage("economy.not-enough-money", ["{DIFFERENCE}" => $args["money"] - $balance]);
             return;
         }
-        $this->plugin->getEconomyProvider()->giveMoney($sender, $args["money"], function(bool $success) use ($member, $args, $faction): void {
+        PiggyFactions::getInstance()->getEconomyProvider()->giveMoney($sender, $args["money"], function(bool $success) use ($member, $args, $faction): void {
             if (!$success) {
                 $member->sendMessage("generic-error", ["{CONTEXT}" => "Unable to give money to your account."]);
                 return;

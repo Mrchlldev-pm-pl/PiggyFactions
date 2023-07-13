@@ -8,6 +8,7 @@ use CortexPE\Commando\args\RawStringArgument;
 use DaPigGuy\PiggyFactions\commands\subcommands\FactionSubCommand;
 use DaPigGuy\PiggyFactions\event\management\FactionUnbanEvent;
 use DaPigGuy\PiggyFactions\factions\Faction;
+use DaPigGuy\PiggyFactions\PiggyFactions;
 use DaPigGuy\PiggyFactions\players\FactionsPlayer;
 use pocketmine\player\Player;
 
@@ -15,7 +16,7 @@ class UnbanSubCommand extends FactionSubCommand
 {
     public function onNormalRun(Player $sender, ?Faction $faction, FactionsPlayer $member, string $aliasUsed, array $args): void
     {
-        $target = $this->plugin->getPlayerManager()->getPlayerByName($args["name"]);
+        $target = PiggyFactions::getInstance()->getPlayerManager()->getPlayerByName($args["name"]);
         if ($target === null) {
             $member->sendMessage("commands.invalid-player", ["{PLAYER}" => $args["name"]]);
             return;

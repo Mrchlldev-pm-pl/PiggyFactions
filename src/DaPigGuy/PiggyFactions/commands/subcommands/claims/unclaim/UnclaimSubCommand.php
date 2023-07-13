@@ -7,6 +7,7 @@ namespace DaPigGuy\PiggyFactions\commands\subcommands\claims\unclaim;
 use DaPigGuy\PiggyFactions\commands\subcommands\FactionSubCommand;
 use DaPigGuy\PiggyFactions\event\claims\UnclaimChunkEvent;
 use DaPigGuy\PiggyFactions\factions\Faction;
+use DaPigGuy\PiggyFactions\PiggyFactions;
 use DaPigGuy\PiggyFactions\players\FactionsPlayer;
 use pocketmine\player\Player;
 
@@ -14,7 +15,7 @@ class UnclaimSubCommand extends FactionSubCommand
 {
     public function onNormalRun(Player $sender, ?Faction $faction, FactionsPlayer $member, string $aliasUsed, array $args): void
     {
-        $claim = $this->plugin->getClaimsManager()->getClaimByPosition($sender->getPosition());
+        $claim = PiggyFactions::getInstance()->getClaimsManager()->getClaimByPosition($sender->getPosition());
         if ($claim === null) {
             $member->sendMessage("commands.unclaim.not-claimed");
             return;
@@ -28,23 +29,23 @@ class UnclaimSubCommand extends FactionSubCommand
         $ev->call();
         if ($ev->isCancelled()) return;
 
-        $this->plugin->getClaimsManager()->deleteClaim($claim);
+        PiggyFactions::getInstance()->getClaimsManager()->deleteClaim($claim);
         $member->sendMessage("commands.unclaim.success");
     }
 
     protected function prepare(): void
     {
-        if ($this->plugin->getConfig()->getNested("factions.claims.unclaimall", true)) {
-            $this->registerSubCommand(new UnclaimAllSubCommand($this->plugin, "all", "Unclaims all claims"));
+        if (PiggyFactions::getInstance()->getConfig()->getNested("factions.claims.unclaimall", true)) {
+            $this->registerSubCommand(new UnclaimAllSubCommand("all", "Unclaims all claims"));
         }
-        if ($this->plugin->getConfig()->getNested("factions.claims.autoclaim", true)) {
-            $this->registerSubCommand(new UnclaimAutoSubCommand($this->plugin, "auto", "Automatically unclaim chunks", ["a"]));
+        if (PiggyFactions::getInstance()->getConfig()->getNested("factions.claims.autoclaim", true)) {
+            $this->registerSubCommand(new UnclaimAutoSubCommand("auto", "Automatically unclaim chunks", ["a"]));
         }
-        if ($this->plugin->getConfig()->getNested("factions.claims.circle.enabled", true)) {
-            $this->registerSubCommand(new UnclaimCircleSubCommand($this->plugin, "circle", "Unclaims chunks in a circle radius", ["c"]));
+        if (PiggyFactions::getInstance()->getConfig()->getNested("factions.claims.circle.enabled", true)) {
+            $this->registerSubCommand(new UnclaimCircleSubCommand("circle", "Unclaims chunks in a circle radius", ["c"]));
         }
-        if ($this->plugin->getConfig()->getNested("factions.claims.square.enabled", true)) {
-            $this->registerSubCommand(new UnclaimSquareSubCommand($this->plugin, "square", "Unclaims chunks in a square radius", ["s"]));
+        if (PiggyFactions::getInstance()->getConfig()->getNested("factions.claims.square.enabled", true)) {
+            $this->registerSubCommand(new UnclaimSquareSubCommand("square", "Unclaims chunks in a square radius", ["s"]));
         }
     }
 }

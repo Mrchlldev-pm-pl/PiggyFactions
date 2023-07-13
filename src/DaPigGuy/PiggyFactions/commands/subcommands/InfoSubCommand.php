@@ -6,6 +6,7 @@ namespace DaPigGuy\PiggyFactions\commands\subcommands;
 
 use CortexPE\Commando\args\TextArgument;
 use DaPigGuy\PiggyFactions\factions\Faction;
+use DaPigGuy\PiggyFactions\PiggyFactions;
 use DaPigGuy\PiggyFactions\utils\FormattedTime;
 use DaPigGuy\PiggyFactions\utils\Roles;
 use DaPigGuy\PiggyFactions\utils\RoundValue;
@@ -18,11 +19,11 @@ class InfoSubCommand extends FactionSubCommand
 
     public function onBasicRun(CommandSender $sender, array $args): void
     {
-        $faction = $sender instanceof Player ? $this->plugin->getPlayerManager()->getPlayerFaction($sender->getUniqueId()) : null;
+        $faction = $sender instanceof Player ? PiggyFactions::getInstance()->getPlayerManager()->getPlayerFaction($sender->getUniqueId()) : null;
         if (isset($args["faction"])) {
-            $faction = $this->plugin->getFactionsManager()->getFactionByName($args["faction"]);
+            $faction = PiggyFactions::getInstance()->getFactionsManager()->getFactionByName($args["faction"]);
             if ($faction === null) {
-                $this->plugin->getLanguageManager()->sendMessage($sender, "commands.invalid-faction", ["{FACTION}" => $args["faction"]]);
+                PiggyFactions::getInstance()->getLanguageManager()->sendMessage($sender, "commands.invalid-faction", ["{FACTION}" => $args["faction"]]);
                 return;
             }
         }
@@ -35,13 +36,13 @@ class InfoSubCommand extends FactionSubCommand
         $memberNamesByRole = [];
         foreach ($faction->getMembers() as $m) {
             $memberNamesByRole[$m->getRole()][] = $m->getUsername();
-            $memberNamesWithRole[] = $this->plugin->getTagManager()->getPlayerRankSymbol($m) . $m->getUsername();
+            $memberNamesWithRole[] = PiggyFactions::getInstance()->getTagManager()->getPlayerRankSymbol($m) . $m->getUsername();
         }
 
-        $this->plugin->getLanguageManager()->sendMessage($sender, "commands.info.message", [
+        PiggyFactions::getInstance()->getLanguageManager()->sendMessage($sender, "commands.info.message", [
             "{FACTION}" => $faction->getName(),
-            "{DESCRIPTION}" => $faction->getDescription() ?? $this->plugin->getLanguageManager()->getMessage($sender instanceof Player ? $this->plugin->getPlayerManager()->getPlayer($sender)->getLanguage() : $this->plugin->getLanguageManager()->getDefaultLanguage(), "commands.info.description-not-set"),
-            "{CLAIMS}" => count($this->plugin->getClaimsManager()->getFactionClaims($faction)),
+            "{DESCRIPTION}" => $faction->getDescription() ?? PiggyFactions::getInstance()->getLanguageManager()->getMessage($sender instanceof Player ? PiggyFactions::getInstance()->getPlayerManager()->getPlayer($sender)->getLanguage() : PiggyFactions::getInstance()->getLanguageManager()->getDefaultLanguage(), "commands.info.description-not-set"),
+            "{CLAIMS}" => count(PiggyFactions::getInstance()->getClaimsManager()->getFactionClaims($faction)),
             "{POWER}" => RoundValue::round($faction->getPower()),
             "{TOTALPOWER}" => $faction->getMaxPower(),
             "{CREATIONDATE}" => date("F j, Y @ g:i a T", $faction->getCreationTime()),
@@ -56,7 +57,7 @@ class InfoSubCommand extends FactionSubCommand
                 return $f->getName();
             }, $faction->getEnemies())),
             "{RELATIONS}" => implode(", ", array_map(function (Faction $f) use ($faction): string {
-                $color = ["enemy" => $this->plugin->getLanguageManager()->translateColorTags($this->plugin->getConfig()->getNested("symbols.colors.relations.enemy")), "ally" => $this->plugin->getLanguageManager()->translateColorTags($this->plugin->getConfig()->getNested("symbols.colors.relations.ally"))];
+                $color = ["enemy" => PiggyFactions::getInstance()->getLanguageManager()->translateColorTags(PiggyFactions::getInstance()->getConfig()->getNested("symbols.colors.relations.enemy")), "ally" => PiggyFactions::getInstance()->getLanguageManager()->translateColorTags(PiggyFactions::getInstance()->getConfig()->getNested("symbols.colors.relations.ally"))];
                 return $color[$faction->getRelation($f)] . $f->getName();
             }, array_merge($faction->getAllies(), $faction->getEnemies()))),
             "{OFFICERS}" => implode(", ", $memberNamesByRole[Roles::OFFICER] ?? []),

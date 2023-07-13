@@ -15,7 +15,7 @@ use DaPigGuy\PiggyFactions\permissions\PermissionFactory;
 use DaPigGuy\PiggyFactions\PiggyFactions;
 use DaPigGuy\PiggyFactions\players\FactionsPlayer;
 use DaPigGuy\PiggyFactions\utils\PiggyArgument;
-use jojoe77777\FormAPI\CustomForm;
+use Vecnavium\FormsUI\CustomForm;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
@@ -31,12 +31,12 @@ abstract class FactionSubCommand extends BaseSubCommand
 
     protected ?string $parentNode = null;
 
-    public function __construct(PiggyFactions $plugin, string $name, string $description = "", array $aliases = [])
+    public function __construct(string $name, string $description = "", array $aliases = [])
     {
         $permissionPrefix = "piggyfactions.command.faction.";
         if ($this->parentNode !== null) $permissionPrefix = $permissionPrefix . $this->parentNode . ".";
         $this->setPermission($permissionPrefix . $name);
-        parent::__construct($plugin, $name, $description, $aliases);
+        parent::__construct($name, $description, $aliases);
     }
 
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void
@@ -55,13 +55,8 @@ abstract class FactionSubCommand extends BaseSubCommand
                 return;
             }
 
-            if (!$this->factionPermission) {
-                $parent = $this->getParent();
+            if (!$this->factionPermission){
                 $permission = $this->getName();
-                while ($parent instanceof BaseSubCommand) {
-                    $permission = $parent->getName();
-                    $parent = $parent->getParent();
-                }
                 if (PermissionFactory::getPermission($permission) !== null) {
                     if (!$faction->hasPermission($member, $permission)) {
                         $member->sendMessage("commands.no-permission");

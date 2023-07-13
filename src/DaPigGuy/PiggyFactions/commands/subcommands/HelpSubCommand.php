@@ -19,10 +19,10 @@ class HelpSubCommand extends FactionSubCommand
 
     protected bool $requiresPlayer = false;
 
-    public function __construct(PiggyFactions $plugin, FactionCommand $parentCommand, string $name, string $description = "", array $aliases = [])
+    public function __construct(FactionCommand $parentCommand, string $name, string $description = "", array $aliases = [])
     {
         $this->parentCommand = $parentCommand;
-        parent::__construct($plugin, $name, $description, $aliases);
+        parent::__construct($name, $description, $aliases);
     }
 
     public function onBasicRun(CommandSender $sender, array $args): void

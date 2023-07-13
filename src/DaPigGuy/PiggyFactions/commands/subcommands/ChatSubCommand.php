@@ -14,10 +14,10 @@ class ChatSubCommand extends FactionSubCommand
 {
     private string $chat;
 
-    public function __construct(PiggyFactions $plugin, string $chat, string $name, string $description = "", array $aliases = [])
+    public function __construct(string $chat, string $name, string $description = "", array $aliases = [])
     {
         $this->chat = $chat;
-        parent::__construct($plugin, $name, $description, $aliases);
+        parent::__construct($name, $description, $aliases);
     }
 
     public function onNormalRun(Player $sender, ?Faction $faction, FactionsPlayer $member, string $aliasUsed, array $args): void

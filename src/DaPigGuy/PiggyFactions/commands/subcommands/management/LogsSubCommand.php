@@ -9,8 +9,9 @@ use CortexPE\Commando\args\RawStringArgument;
 use DaPigGuy\PiggyFactions\commands\subcommands\FactionSubCommand;
 use DaPigGuy\PiggyFactions\factions\Faction;
 use DaPigGuy\PiggyFactions\logs\LogsManager;
+use DaPigGuy\PiggyFactions\PiggyFactions;
 use DaPigGuy\PiggyFactions\players\FactionsPlayer;
-use jojoe77777\FormAPI\SimpleForm;
+use Vecnavium\FormsUI\SimpleForm;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
@@ -30,7 +31,7 @@ class LogsSubCommand extends FactionSubCommand
         $offset = $currentPage * LogsSubCommand::ENTRIES_PER_PAGE;
 
         if (!isset($args["action"]) || is_numeric($args["action"])) {
-            if ($this->plugin->areFormsEnabled()) {
+            if (PiggyFactions::getInstance()->areFormsEnabled()) {
                 $this->sendLogsForm($sender, $faction, $currentPage);
                 return;
             }
@@ -40,7 +41,7 @@ class LogsSubCommand extends FactionSubCommand
         }
 
         $action = $args["action"];
-        if ($this->plugin->areFormsEnabled()) {
+        if (PiggyFactions::getInstance()->areFormsEnabled()) {
             $this->sendLogsForm($sender, $faction, $currentPage, ($action));
             return;
         }

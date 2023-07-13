@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DaPigGuy\PiggyFactions\commands\subcommands\claims\unclaim;
 
 use CortexPE\Commando\args\IntegerArgument;
+use DaPigGuy\PiggyFactions\PiggyFactions;
 use pocketmine\player\Player;
 use pocketmine\world\format\Chunk;
 
@@ -14,13 +15,13 @@ class UnclaimCircleSubCommand extends UnclaimMultipleSubCommand
     {
         $radius = (int)$args["radius"];
         if ($radius < 1) {
-            $this->plugin->getLanguageManager()->sendMessage($player, "commands.claim.radius-less-than-one");
+            PiggyFactions::getInstance()->getLanguageManager()->sendMessage($player, "commands.claim.radius-less-than-one");
             return [];
         }
 
-        $maxRadius = $this->plugin->getConfig()->getNested("factions.claims.circle.max-radius", 15);
+        $maxRadius = PiggyFactions::getInstance()->getConfig()->getNested("factions.claims.circle.max-radius", 15);
         if ($radius > $maxRadius) {
-            $this->plugin->getLanguageManager()->sendMessage($player, "commands.claim.radius-limit", ["{MAX}" => $maxRadius]);
+            PiggyFactions::getInstance()->getLanguageManager()->sendMessage($player, "commands.claim.radius-limit", ["{MAX}" => $maxRadius]);
             return [];
         }
         $radius--;

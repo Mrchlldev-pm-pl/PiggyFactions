@@ -7,6 +7,7 @@ namespace DaPigGuy\PiggyFactions\commands\subcommands\admin\powerboost;
 use CortexPE\Commando\args\FloatArgument;
 use CortexPE\Commando\args\RawStringArgument;
 use DaPigGuy\PiggyFactions\commands\subcommands\FactionSubCommand;
+use DaPigGuy\PiggyFactions\PiggyFactions;
 use pocketmine\command\CommandSender;
 
 class PowerBoostPlayerSubCommand extends FactionSubCommand
@@ -16,13 +17,13 @@ class PowerBoostPlayerSubCommand extends FactionSubCommand
 
     public function onBasicRun(CommandSender $sender, array $args): void
     {
-        $player = $this->plugin->getPlayerManager()->getPlayerByName($args["name"]);
+        $player = PiggyFactions::getInstance()->getPlayerManager()->getPlayerByName($args["name"]);
         if ($player === null) {
-            $this->plugin->getLanguageManager()->sendMessage($sender, "commands.invalid-player", ["{PLAYER}" => $args["player"]]);
+            PiggyFactions::getInstance()->getLanguageManager()->sendMessage($sender, "commands.invalid-player", ["{PLAYER}" => $args["player"]]);
             return;
         }
         $player->setPowerBoost($args["power"]);
-        $this->plugin->getLanguageManager()->sendMessage($sender, "commands.powerboost.success-player", ["{PLAYER}" => $player->getUsername(), "{POWER}" => $args["power"]]);
+        PiggyFactions::getInstance()->getLanguageManager()->sendMessage($sender, "commands.powerboost.success-player", ["{PLAYER}" => $player->getUsername(), "{POWER}" => $args["power"]]);
         $player->sendMessage("commands.powerboost.boost-player", ["{POWER}" => $args["power"]]);
     }
 

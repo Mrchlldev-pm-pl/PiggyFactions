@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DaPigGuy\PiggyFactions\commands\subcommands;
 
+use DaPigGuy\PiggyFactions\PiggyFactions;
 use pocketmine\command\CommandSender;
 use pocketmine\console\ConsoleCommandSender;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
@@ -19,7 +20,7 @@ class DebugSubCommand extends FactionSubCommand
     public function onBasicRun(CommandSender $sender, array $args): void
     {
         if ($sender instanceof ConsoleCommandSender) {
-            $plugin = $this->plugin;
+            $plugin = PiggyFactions::getInstance();
             $config = $plugin->getConfig();
             $plugin->getLogger()->info("Showing debug info..." . PHP_EOL .
                 "-- PLUGIN INFO --" . PHP_EOL .

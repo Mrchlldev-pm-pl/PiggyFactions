@@ -8,6 +8,7 @@ use CortexPE\Commando\args\IntegerArgument;
 use CortexPE\Commando\args\RawStringArgument;
 use DaPigGuy\PiggyFactions\factions\Faction;
 use DaPigGuy\PiggyFactions\flags\Flag;
+use DaPigGuy\PiggyFactions\PiggyFactions;
 use DaPigGuy\PiggyFactions\utils\RoundValue;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
@@ -35,13 +36,13 @@ class TopSubCommand extends FactionSubCommand
         $type = $args["type"] ?? "power";
         if (!isset($types[$type])) return;
 
-        if ($this->plugin->isFactionBankEnabled()) {
+        if (PiggyFactions::getInstance()->isFactionBankEnabled()) {
             $types["money"] = function (Faction $a, Faction $b): int {
                 return (int)($b->getMoney() - $a->getMoney());
             };
         }
 
-        $factions = array_filter($this->plugin->getFactionsManager()->getFactions(), function (Faction $faction): bool {
+        $factions = array_filter(PiggyFactions::getInstance()->getFactionsManager()->getFactions(), function (Faction $faction): bool {
             return !$faction->getFlag(Flag::SAFEZONE) && !$faction->getFlag(Flag::WARZONE);
         });
         usort($factions, $types[$type]);
@@ -51,17 +52,17 @@ class TopSubCommand extends FactionSubCommand
         if ($page > $maxPages) $page = $maxPages;
         else if ($page < 0) $page = 0;
 
-        $language = $sender instanceof Player ? $this->plugin->getLanguageManager()->getPlayerLanguage($sender) : $this->plugin->getLanguageManager()->getDefaultLanguage();
-        $message = $this->plugin->getLanguageManager()->getMessage($language, "commands.top.header", ["{PAGE}" => $page + 1, "{TOTALPAGES}" => ceil(count($factions) / self::PAGE_LENGTH), "{CATEGORY}" => ucfirst($type)]);
+        $language = $sender instanceof Player ? PiggyFactions::getInstance()->getLanguageManager()->getPlayerLanguage($sender) : PiggyFactions::getInstance()->getLanguageManager()->getDefaultLanguage();
+        $message = PiggyFactions::getInstance()->getLanguageManager()->getMessage($language, "commands.top.header", ["{PAGE}" => $page + 1, "{TOTALPAGES}" => ceil(count($factions) / self::PAGE_LENGTH), "{CATEGORY}" => ucfirst($type)]);
         foreach (array_slice($factions, $page * self::PAGE_LENGTH, self::PAGE_LENGTH) as $rank => $faction) {
-            $message .= TextFormat::EOL . $this->plugin->getLanguageManager()->getMessage($language, "commands.top.line." . $type, [
-                    "{RELATIONCOLOR}" => $sender instanceof Player ? $this->plugin->getLanguageManager()->getColorFor($sender, $faction) : $this->plugin->getConfig()->getNested("symbols.colors.neutral", TextFormat::WHITE),
+            $message .= TextFormat::EOL . PiggyFactions::getInstance()->getLanguageManager()->getMessage($language, "commands.top.line." . $type, [
+                    "{RELATIONCOLOR}" => $sender instanceof Player ? PiggyFactions::getInstance()->getLanguageManager()->getColorFor($sender, $faction) : PiggyFactions::getInstance()->getConfig()->getNested("symbols.colors.neutral", TextFormat::WHITE),
                     "{RANK}" => $rank + 1 + $page * self::PAGE_LENGTH,
                     "{FACTION}" => $faction->getName(),
                     "{ONLINE}" => count($faction->getOnlineMembers()),
                     "{MEMBERS}" => count($faction->getMembers()),
                     "{POWER}" => RoundValue::round($faction->getPower()),
-                    "{TOTALPOWER}" => count($faction->getMembers()) * $this->plugin->getConfig()->getNested("factions.power.max"),
+                    "{TOTALPOWER}" => count($faction->getMembers()) * PiggyFactions::getInstance()->getConfig()->getNested("factions.power.max"),
                     "{MONEY}" => RoundValue::round($faction->getMoney())
                 ]);
         }
