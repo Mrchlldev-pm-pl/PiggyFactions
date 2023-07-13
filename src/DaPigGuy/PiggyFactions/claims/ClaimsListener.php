@@ -34,7 +34,12 @@ class ClaimsListener implements Listener
 
     public function onPlace(BlockPlaceEvent $event): void
     {
-        if (!$this->canAffectArea($event->getPlayer(), $event->getBlockAgainst()->getPosition())) $event->cancel();
+        foreach($event->getTransaction()->getBlocks() as [$x, $y, $z]) {
+            if(!$this->canAffectArea($event->getPlayer(), new Position($x, $y, $z, $event->getPlayer()->getWorld()))) {
+                $event->cancel();
+                return;
+            }
+        }
     }
 
     public function onCommandPreprocess(CommandEvent $event): void
@@ -50,12 +55,10 @@ class ClaimsListener implements Listener
             $claim = $this->manager->getClaimByPosition($player->getPosition());
             if (!$member->isInAdminMode() && $claim !== null && $claim->getFaction() !== $faction) {
                 $relation = $faction === null ? Relations::NONE : $faction->getRelation($claim->getFaction());
-                if (str_starts_with($message, "/")) {
-                    $command = substr(explode(" ", $message)[0], 1);
-                    if (in_array($command, $this->plugin->getConfig()->getNested("factions.claims.denied-commands." . $relation, []))) {
-                        $member->sendMessage("claims.command-denied", ["{COMMAND}" => $command, "{RELATION}" => $relation === "none" ? "neutral" : $relation]);
-                        $event->cancel();
-                    }
+                $command = substr(explode(" ", $message)[0], 1);
+                if (in_array($command, $this->plugin->getConfig()->getNested("factions.claims.denied-commands." . $relation, []))) {
+                    $member->sendMessage("claims.command-denied", ["{COMMAND}" => $command, "{RELATION}" => $relation === "none" ? "neutral" : $relation]);
+                    $event->cancel();
                 }
             }
         }
