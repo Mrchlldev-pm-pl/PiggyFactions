@@ -9,10 +9,11 @@ use DaPigGuy\PiggyFactions\event\claims\ChunkOverclaimEvent;
 use DaPigGuy\PiggyFactions\event\claims\ClaimChunkEvent;
 use DaPigGuy\PiggyFactions\factions\Faction;
 use DaPigGuy\PiggyFactions\players\FactionsPlayer;
+use DaPigGuy\PiggyFactions\PiggyFactions;
 use pocketmine\player\Player;
 use pocketmine\world\format\Chunk;
 
-class ClaimSubCommand extends FactionSubCommand
+class ClaimSubCommand extends FactionSubCommand 
 {
     public function onNormalRun(Player $sender, ?Faction $faction, FactionsPlayer $member, string $aliasUsed, array $args): void
     {
@@ -65,13 +66,14 @@ class ClaimSubCommand extends FactionSubCommand
 
     protected function prepare(): void
     {
-        if ($this->plugin->getNested("factions.claims.autoclaim", true)) {
+        $pf = PiggyFactions::getInstance();
+        if ($pf->getConfig->getNested("factions.claims.autoclaim", true)) {
             $this->registerSubCommand(new ClaimAutoSubCommand($this->plugin, "auto", "Automatically claim chunks", ["a"]));
         }
-        if ($this->plugin->getConfig()->getNested("factions.claims.circle.enabled", true)) {
+        if ($pf->getConfig()->getNested("factions.claims.circle.enabled", true)) {
             $this->registerSubCommand(new ClaimCircleSubCommand($this->plugin, "circle", "Claim chunks in a circle radius", ["c"]));
         }
-        if ($this->plugin->getConfig()->getNested("factions.claims.square.enabled", true)) {
+        if ($pf->getConfig()->getNested("factions.claims.square.enabled", true)) {
             $this->registerSubCommand(new ClaimSquareSubCommand($this->plugin, "square", "Claim chunks in a square radius", ["s"]));
         }
     }
