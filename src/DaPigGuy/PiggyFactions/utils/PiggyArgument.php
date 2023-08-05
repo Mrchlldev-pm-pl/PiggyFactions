@@ -36,7 +36,7 @@ class PiggyArgument extends BaseArgument
         return $this->argument->canParse($testString, $sender);
     }
 
-    public function parse(string $argument, CommandSender $sender)
+    public function parse(string $argument, CommandSender $sender): array
     {
         return $this->argument->parse($argument, $sender);
     }
