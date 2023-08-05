@@ -11,9 +11,9 @@ database:
 
 economy:
   enabled: false
-  provider: bedrockeconomy
+  provider: economyapi
   faction-bank:
-    enabled: true
+    enabled: false
 
 factions:
   enforce-alphanumeric-names: false
@@ -45,6 +45,12 @@ factions:
         - home
         - spawn
         - hub
+        - Lobby
+        - PVP
+        - mines
+        - TheBridge1
+        - TheBridge2
+        - TheBridge3
       none: []
       truce: []
       ally: []
